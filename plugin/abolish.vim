@@ -461,6 +461,12 @@ function! s:parse_substitute(bang,line1,line2,count,args)
   else
     let cmd = a:line1.",".a:line2."substitute"
   endif
+  if empty(bad)
+    let cmd = "keeppatterns " . cmd
+    let bad = substitute(@/, '\W', '', 'g')
+    let case_dict = s:create_dictionary(good, bad, s:normalize_options(flags))
+    let bad = get(case_dict, bad, bad)
+  endif
   return s:substitute_command(cmd,bad,good,flags)
 endfunction
 
